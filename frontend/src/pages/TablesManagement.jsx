@@ -9,6 +9,7 @@ const TablesManagement = () => {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4 sm:mb-6">
             <div>
               <h1 className="text-3xl font-semibold text-black mb-1 xs:mb-2">Tables</h1>
+              <h1>asdadadsad</h1>
               <p className="text-lg font-normal text-gray-600">Manage and track all tables</p>
             </div>
           </div>
