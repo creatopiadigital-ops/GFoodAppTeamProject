@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import DashboardContent from './DashboardContent'
 import TablesManagement from './TablesManagement'
+import Menu from './Menu'
 import DashboardHeader from '../components/DashboardHeader'
 import DashboardSidebar from '../components/DashboardSidebar'
 
@@ -37,17 +38,15 @@ const Dashboard = ({ setIsAuthenticated }) => {
 
   return (
     <div className="h-screen overflow-hidden flex flex-col bg-[#F5F5F5]">
-
       {/* ── Header ── */}
-      <DashboardHeader 
-        setSidebarOpen={setSidebarOpen} 
-        currentTime={currentTime} 
-        handleLogout={handleLogout} 
+      <DashboardHeader
+        setSidebarOpen={setSidebarOpen}
+        currentTime={currentTime}
+        handleLogout={handleLogout}
       />
 
       {/* ── Body: sidebar + scrollable main ── */}
       <div className="flex flex-1 min-h-0 overflow-hidden">
-
         {/* Mobile overlay */}
         {sidebarOpen && (
           <div
@@ -57,16 +56,22 @@ const Dashboard = ({ setIsAuthenticated }) => {
         )}
 
         {/* ── Sidebar ── */}
-        <DashboardSidebar 
-          sidebarOpen={sidebarOpen} 
-          setSidebarOpen={setSidebarOpen} 
-          activeSection={activeSection} 
-          navigateTo={navigateTo} 
+        <DashboardSidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          activeSection={activeSection}
+          navigateTo={navigateTo}
         />
 
         {/* ── Main scrollable content ── */}
         <main className="flex-1 min-w-0 overflow-y-auto p-4 md:p-6 lg:p-8">
-          {activeSection === 'tables' ? <TablesManagement /> : <DashboardContent />}
+          {activeSection === 'tables' ? (
+            <TablesManagement />
+          ) : activeSection === 'menu' ? (
+            <Menu />
+          ) : (
+            <DashboardContent />
+          )}
         </main>
       </div>
     </div>
