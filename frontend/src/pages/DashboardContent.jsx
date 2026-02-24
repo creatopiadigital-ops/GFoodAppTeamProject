@@ -6,6 +6,7 @@ const DashboardContent = () => {
         <p className="text-sm sm:text-base text-gray-500 mt-1">
           Welcome to your restaurant management dashboard
         </p>
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 mt-6">ferelynnnnnnnnn</h1>
       </div>
     </div>
   )
