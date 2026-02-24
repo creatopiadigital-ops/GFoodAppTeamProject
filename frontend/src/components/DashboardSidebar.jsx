@@ -6,8 +6,14 @@ import tableNotActiveIcon from '../images/table-not-active.png'
 
 // ─── Nav config ────────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
-  { id: 'dashboard', label: 'Dashboard', activeIcon: dashboardActiveIcon, icon: dashboardNotActiveIcon },
-  { id: 'tables',    label: 'Tables',    activeIcon: tableActiveIcon,      icon: tableNotActiveIcon     },
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    activeIcon: dashboardActiveIcon,
+    icon: dashboardNotActiveIcon
+  },
+  { id: 'tables', label: 'Tables', activeIcon: tableActiveIcon, icon: tableNotActiveIcon },
+  { id: 'menu', label: 'Menu', activeIcon: tableActiveIcon, icon: tableNotActiveIcon }
 ]
 
 // ─── Sidebar nav button ────────────────────────────────────────────────────────
@@ -22,7 +28,7 @@ const SidebarNavButton = ({ item, isActive, onClick }) => (
       'lg:w-full lg:min-h-[86px] lg:py-4 lg:px-3',
       isActive
         ? 'bg-[#9810FA] border-transparent shadow-lg text-white'
-        : 'border-[#E5E5E5] text-purple-700 hover:bg-purple-50',
+        : 'border-[#E5E5E5] text-purple-700 hover:bg-purple-50'
     ].join(' ')}
   >
     <img
@@ -54,7 +60,7 @@ const DashboardSidebar = ({ sidebarOpen, setSidebarOpen, activeSection, navigate
         'z-50 md:z-auto',
         'w-[220px] md:w-[72px] lg:w-[198px]',
         'px-3 pt-4 pb-6 md:px-2 md:py-4 lg:px-4 lg:py-6',
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       ].join(' ')}
     >
       {/* Mobile: logo + close button */}
