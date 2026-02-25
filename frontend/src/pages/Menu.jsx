@@ -10,18 +10,18 @@ const Menu = () => {
             <p className="text-lg font-normal text-gray-600">See what's on your Menu</p>
           </div>
           <div className="flex flex-row m-auto center px-4 gap-6 relative">
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Take Out
             </button>
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Additional Orders
             </button>
-            <button class="px-4 py-2 font-light border border-purple-500 text-white bg-purple-900 rounded-md ">
+            <button className="px-4 py-2 font-light border border-purple-500 text-white bg-purple-900 rounded-md ">
               + Add New Order
             </button>
           </div>
         </div>
-        <div class=" w-full bg-white mt-4 p-4">
+        <div className=" w-full bg-white mt-4 p-4">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
               <svg
@@ -45,28 +45,28 @@ const Menu = () => {
             />
           </div>
           <div className="flex gap-6 my-3">
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               All
             </button>
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Meals
             </button>
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Seafood
             </button>
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Dessert
             </button>
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Sizzling
             </button>
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Beverages
             </button>
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Samgyupsal
             </button>
-            <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Other
             </button>
           </div>
