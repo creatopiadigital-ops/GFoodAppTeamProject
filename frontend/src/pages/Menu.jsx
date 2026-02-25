@@ -96,19 +96,19 @@ const Menu = () => {
             <h1 className="text-3xl font-meduim text-black mb-1 xs:mb-2">Menu</h1>
             <p className="text-lg font-normal text-gray-600">See what's on your Menu</p>
           </div>
-          <div className="grid auto-cols-max grid-flow-col grid-row-3 gap-3 justify-self-end ">
-            <button class="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+          <div className="flex flex-row m-auto center px-4 gap-6 relative">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
               Take Out
             </button>
-            <button class="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
-              Additional Order
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+              Additional Orders
             </button>
-            <button class="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button className="px-4 py-2 font-light border border-purple-500 text-white bg-purple-900 rounded-md ">
               + Add New Order
             </button>
           </div>
         </div>
-        <div class=" w-full bg-white mt-4 p-4">
+        <div className=" w-full bg-white mt-4 p-4">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
               <svg
@@ -131,12 +131,31 @@ const Menu = () => {
               className="w-full max-w-xs sm:max-w-sm md:max-w-md pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base font-normal"
             />
           </div>
-          <div className="flex gap-6 my-3 overflow-x-scroll pb-4">
-            {MenuButton.map((itemB) => (
-              <button class="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
-                {itemB.holderButton}
-              </button>
-            ))}
+          <div className="flex gap-6 my-3">
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+              All
+            </button>
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+              Meals
+            </button>
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+              Seafood
+            </button>
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+              Dessert
+            </button>
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+              Sizzling
+            </button>
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+              Beverages
+            </button>
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+              Samgyupsal
+            </button>
+            <button className="px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+              Other
+            </button>
           </div>
           <div className="flex font-Meduim">
             <h2 className="fex my-2">Meals</h2>
