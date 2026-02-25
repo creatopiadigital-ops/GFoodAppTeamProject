@@ -13,7 +13,8 @@ const NAV_ITEMS = [
     icon: dashboardNotActiveIcon
   },
   { id: 'tables', label: 'Tables', activeIcon: tableActiveIcon, icon: tableNotActiveIcon },
-  { id: 'menu', label: 'Menu', activeIcon: tableActiveIcon, icon: tableNotActiveIcon }
+  { id: 'menu', label: 'Menu', activeIcon: tableActiveIcon, icon: tableNotActiveIcon },
+  { id: 'crew', label: 'Crew ', activeIcon: tableActiveIcon, icon: tableNotActiveIcon }
 ]
 
 // ─── Sidebar nav button ────────────────────────────────────────────────────────
