@@ -4,7 +4,7 @@ const Menu = () => {
     <div className="flex flex-col h-full bg-[#F5F5F5]">
       <main className="flex-1 flex flex-col min-h-0 ">
         {/* Header */}
-        <div className="flex gap-6 w-full grid grid-cols-1 lg:grid-cols-2">
+        <div className=" gap-6 w-full grid grid-cols-1 lg:grid-cols-2">
           <div className="">
             <h1 className="text-3xl font-meduim text-black mb-1 xs:mb-2">Menu</h1>
             <p className="text-lg font-normal text-gray-600">See what's on your Menu</p>

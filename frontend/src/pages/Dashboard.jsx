@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import DashboardContent from './DashboardContent'
 import TablesManagement from './TablesManagement'
 import Menu from './Menu'
+import MenuCrew from './MenuCrew'
 import DashboardHeader from '../components/DashboardHeader'
 import DashboardSidebar from '../components/DashboardSidebar'
 
@@ -69,6 +70,8 @@ const Dashboard = ({ setIsAuthenticated }) => {
             <TablesManagement />
           ) : activeSection === 'menu' ? (
             <Menu />
+          ) : activeSection === 'crew' ? (
+            <MenuCrew />
           ) : (
             <DashboardContent />
           )}
