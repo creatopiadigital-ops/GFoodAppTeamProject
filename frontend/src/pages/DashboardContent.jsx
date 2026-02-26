@@ -3,6 +3,8 @@ import bell_icon from '../assets/icons/bell_icon.svg'
 import sales_icon from '../assets/icons/sales_icon.svg'
 import order_icon from '../assets/icons/order_icon.svg'
 import activetable_icon from '../assets/icons/activetable_icon.svg'
+import DashboardStatCard from '../components/DashboardStatCard'
+
 import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis } from 'recharts'
 
 const DashboardContent = () => {
@@ -182,24 +184,25 @@ const DashboardContent = () => {
         <div className="flex flex-1 flex-col gap-4">
           {/* Left: Cards */}
           <div className="flex">
-            <div className="flex-1 grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-4 gap-3 xs:gap-4">
+            <div className="flex-1 grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2  xl:grid-cols-4 2xl:grid-cols-4 gap-3 xs:gap-4">
               {/* New Orders */}
               {cardsData.map((card) => (
-                <div
-                  key={card.title}
-                  className="flex items-center justify-between rounded-xl bg-white px-5 py-4 shadow-sm"
-                >
-                  <div>
-                    <p className="text-xs text-gray-500">{card.title}</p>
-                    <p className="mt-1 text-2xl font-semibold text-gray-900">{card.value}</p>
-                  </div>
-                  {/* bell icon */}
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-lg ${card.color}`}
-                  >
-                    <img src={card.icon} alt={card.title} className="h-5 w-5" />
-                  </div>
-                </div>
+                <DashboardStatCard key={card.title} tableStats={card} />
+                // <div
+                //   key={card.title}
+                //   className="flex items-center justify-between rounded-xl bg-white px-5 py-4 shadow-sm"
+                // >
+                //   <div>
+                //     <p className="text-xs text-gray-500">{card.title}</p>
+                //     <p className="mt-1 text-2xl font-semibold text-gray-900">{card.value}</p>
+                //   </div>
+                //   {/* bell icon */}
+                //   <div
+                //     className={`flex h-10 w-10 items-center justify-center rounded-lg ${card.color}`}
+                //   >
+                //     <img src={card.icon} alt={card.title} className="h-5 w-5" />
+                //   </div>
+                // </div>
               ))}
             </div>
           </div>
@@ -249,9 +252,9 @@ const DashboardContent = () => {
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                   <p className="text-base font-semibold text-gray-900 shrink-0">Recent Orders</p>
 
-                  <div className="ml-auto flex flex-wrap items-center">
+                  <div className="ml-auto flex flex-wrap items-center gap-2">
                     {/* Tabs */}
-                    <div className=" inline-flex h-9 shrink-0 items-center rounded-lg bg-gray-200 p-1 ">
+                    <div className=" inline-flex h-9 shrink-0 items-center rounded-lg bg-gray-200 p-1">
                       {['All', 'Occupied', 'Available'].map((t) => (
                         <button
                           key={t}
@@ -422,7 +425,7 @@ const DashboardContent = () => {
           </div>
         </div>
         {/* RIGHT: Incoming Orders */}
-        <div className="w-full lg:w-[280px] shrink-0">
+        <div className="w-full lg:w-[280px] xl:w-[340px] 2xl:w-[380px] shrink-0">
           <div className="rounded-xl bg-white p-4 shadow-sm  lg:col-span-2">
             <div className="flex items-center justify-between">
               <p className="text-base font-semibold text-gray-900">Incoming Orders</p>
@@ -433,19 +436,6 @@ const DashboardContent = () => {
 
             <div className="mt-3 space-y-2 rounded-lg bg-purple-50 p-3">
               {incomingOrders.map((o) => {
-                // label row (e.g. "Additional Orders")
-                // if (o.label) {
-                //   return (
-                //     <div
-                //       key={o.id}
-                //       className="flex items-center justify-between rounded-lg bg-white px-3 py-2"
-                //     >
-                //       <p className="text-xs font-medium text-purple-700">{o.label}</p>
-                //     </div>
-                //   )
-                // }
-
-                // normal order row
                 return (
                   <div
                     key={o.id}
