@@ -1,8 +1,47 @@
-import clock_icon from '../assets/icons/clock_icon.svg' // change if you have a clock icon
+import clock_icon from '../assets/icons/clock_icon.svg'
+import { formatTime } from '../utils/timeFormat'
+import { useCurrentTime } from '../hooks/useCurrentTime'
 
 export default function OrderCard({ order, onView }) {
   const isIncoming = (order.status || '').toLowerCase() === 'incoming'
-  // const isActive = order.status === 'active'
+  // const createdDate = new Date(order.createdAt)
+
+  // const formattedDate = createdDate.toLocaleDateString('en-US', {
+  //   month: 'short',
+  //   day: 'numeric',
+  //   year: 'numeric'
+  // })
+  // const [now, setNow] = useState(new Date())
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setNow(new Date())
+  //   }, 60000)
+
+  //   return () => clearInterval(interval)
+  // }, [])
+  const currentTime = useCurrentTime()
+
+  function getTimeAgo(dateString) {
+    const now = new Date(currentTime)
+    const created = new Date(dateString)
+
+    const diffMs = now - created
+    const diffMinutes = Math.floor(diffMs / 60000)
+    const diffHours = Math.floor(diffMinutes / 60)
+    const diffDays = Math.floor(diffHours / 24)
+
+    if (diffMinutes < 1) return 'Just now'
+    if (diffMinutes < 60) return `${diffMinutes} min ago`
+    if (diffHours < 24) return `${diffHours} hr ago`
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+  }
+  // const formattedTime = createdDate.toLocaleTimeString('en-US', {
+  //   hour: '2-digit',
+  //   minute: '2-digit'
+  // })
+
+  const timeAgo = getTimeAgo(order.createdAt)
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
@@ -18,7 +57,7 @@ export default function OrderCard({ order, onView }) {
           <div className="mt-2 flex items-center gap-2 text-xs text-gray-400">
             <img src={clock_icon} alt="Time" className="h-3 w-3" />
             <span>
-              {order.time} • {order.ago}
+              {formatTime(order.createdAt)} • {timeAgo}
             </span>
           </div>
         </div>

@@ -9,20 +9,73 @@ const Orders = () => {
       service: 'Samgyupsal',
       table: 'T-2',
       status: 'Incoming',
-      time: '12:01 PM',
-      ago: '1 min ago'
+      createdAt: '2026-02-27T04:30:15.9564457+08:00'
+    },
+    {
+      id: 'ORD-138',
+      table: 'T-1',
+      service: 'Food',
+      status: 'Incoming',
+      createdAt: '2026-02-18T04:52:15.9564457+08:00'
     },
     {
       id: 'ORD-140',
+      service: 'Samgyupsal',
+      table: 'T-2',
+      status: 'Incoming',
+      createdAt: '2026-02-27T04:30:15.9564457+08:00'
+    },
+    {
+      id: 'ORD-141',
+      table: 'T-1',
       service: 'Food',
-      table: 'T-5',
       status: 'Active',
-      time: '12:05 PM',
-      ago: 'Just now'
+      createdAt: '2026-02-18T04:52:15.9564457+08:00'
+    },
+    {
+      id: 'ORD-142',
+      service: 'Samgyupsal',
+      table: 'T-2',
+      status: 'Incoming',
+      createdAt: '2026-02-27T04:30:15.9564457+08:00'
+    },
+    {
+      id: 'ORD-143',
+      table: 'T-1',
+      service: 'Food',
+      status: 'Active',
+      createdAt: '2026-02-18T04:52:15.9564457+08:00'
     }
   ]
+  //   const createdDate = new Date(order.createdAt)
+  //   const formattedDate = createdDate.toLocaleDateString('en-US', {
+  //     year: 'numeric',
+  //     month: 'short',
+  //     day: 'numeric'
+  //   })
+  //   const formattedTime = createdDate.toLocaleTimeString('en-US', {
+  //     hour: '2-digit',
+  //     minute: '2-digit'
+  //   })
 
-  const [view, setView] = useState('all')
+  //   function getTimeAgo(dateString) {
+  //     const now = new Date()
+  //     const created = new Date(dateString)
+
+  //     const diffMs = now - created
+  //     const diffMinutes = Math.floor(diffMs / 60000)
+  //     const diffHours = Math.floor(diffMinutes / 60)
+  //     const diffDays = Math.floor(diffHours / 24)
+
+  //     if (diffMinutes < 1) return 'Just now'
+  //     if (diffMinutes < 60) return `${diffMinutes} min ago`
+  //     if (diffHours < 24) return `${diffHours} hr ago`
+  //     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+  //   }
+
+  //   const timeAgo = getTimeAgo(order.createdAt)
+
+  const [view, setView] = useState('incoming')
   const [search, setSearch] = useState('')
 
   const filteredOrders = useMemo(() => {
