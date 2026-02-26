@@ -311,22 +311,25 @@ const Menu = () => {
                 </button>
               ))}
             </div>
+            <div className="h-[50vh] overflow-y-auto pr-4 ">
+              <p>Menu</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+                {filteredItems.map((item) => (
+                  <div key={item.id} className="bg-white border rounded-xl shadow-sm p-2">
+                    <img
+                      className="w-full h-[102px] rounded-xl"
+                      src={item.menuImage}
+                      alt={item.menuTitle}
+                    />
+                    <h1 className="text-black text-lg font-semibold">{item.menuTitle}</h1>
+                    <p className="text-gray-500">{item.menuCategory}</p>
+                    <h2 className="font-semibold text-purple-600">{item.menuPrice}</h2>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             {/* ✅ DISPLAY FILTERED ITEMS */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
-              {filteredItems.map((item) => (
-                <div key={item.id} className="bg-white border rounded-xl shadow-sm p-2">
-                  <img
-                    className="w-full h-[102px] rounded-xl"
-                    src={item.menuImage}
-                    alt={item.menuTitle}
-                  />
-                  <h1 className="text-black text-lg font-semibold">{item.menuTitle}</h1>
-                  <p className="text-gray-500">{item.menuCategory}</p>
-                  <h2 className="font-semibold text-purple-600">{item.menuPrice}</h2>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </main>
@@ -667,8 +670,6 @@ export default Menu
 //                 <div className="">
 //                   <h2 className="text-black mb-3 sm:mb-4 font-semibold text-lg">Meals</h2>
 //                 </div>
-//                 {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-8 gap-3 sm:gap-4"> */}
-//                 {/* <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-5  gap-3"> */}
 //                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
 //                   {filteredItems.map((item) => (
 //                     <div className="relative bg-white border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col p-2">
