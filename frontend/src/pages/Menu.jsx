@@ -265,13 +265,25 @@ const Menu = () => {
             <p className="text-lg font-normal text-gray-600">See what's on your Menu</p>
           </div>
           <div className="flex flex-wrap grid auto-cols-max grid-flow-col gap-3 justify-self-end ">
-            <button className="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button
+              className="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 rounded-md hover:bg-purple-500
+                transition-all duration-200 cursor-pointer shadow-sm 
+                hover:shadow-xl"
+            >
               Take Out
             </button>
-            <button className="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button
+              className="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md hover:bg-purple-500
+                transition-all duration-200 cursor-pointer shadow-sm 
+                hover:shadow-xl"
+            >
               Additional Order
             </button>
-            <button className="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md ">
+            <button
+              className="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md hover:bg-purple-500
+                transition-all duration-200 cursor-pointer shadow-sm 
+                hover:shadow-xl"
+            >
               + Add New Order
             </button>
           </div>
