@@ -1,3 +1,4 @@
+import tableIcon from '../images/Modaltable.png'
 //Meals
 import Menu1 from '../images/Chicken.png'
 import Menu2 from '../images/Karekare.png'
@@ -216,6 +217,24 @@ const Menu = () => {
     }
   ]
 
+  const tables = [
+    { id: 1, name: 'Table 1', type: 'Food', seats: 4, isAvailable: true, price: 100 },
+    { id: 2, name: 'Table 2', type: 'Food', seats: 4, isAvailable: true, price: 120 },
+    { id: 3, name: 'Table 3', type: 'Food', seats: 6, isAvailable: false, price: 150 },
+    { id: 4, name: 'Table 4', type: 'Food', seats: 4, isAvailable: false, price: 100 },
+    { id: 5, name: 'Table 1', type: 'Samgyupsal', seats: 4, isAvailable: true, price: 200 },
+    { id: 6, name: 'Table 2', type: 'Samgyupsal', seats: 6, isAvailable: false, price: 250 },
+    { id: 7, name: 'Table 3', type: 'Samgyupsal', seats: 4, isAvailable: true, price: 180 },
+    { id: 8, name: 'Table 4', type: 'Samgyupsal', seats: 4, isAvailable: false, price: 150 },
+    { id: 9, name: 'Table 1', type: 'KTV', seats: 6, isAvailable: false, price: 300 },
+    { id: 10, name: 'Table 2', type: 'KTV', seats: 4, isAvailable: true, price: 250 },
+    { id: 11, name: 'Table 3', type: 'KTV', seats: 4, isAvailable: true, price: 200 },
+    { id: 12, name: 'Table 4', type: 'KTV', seats: 6, isAvailable: false, price: 350 },
+    { id: 13, name: 'Table 5', type: 'Food', seats: 4, isAvailable: true, price: 120 },
+    { id: 14, name: 'Table 6', type: 'Samgyupsal', seats: 6, isAvailable: true, price: 280 },
+    { id: 15, name: 'Table7', type: 'KTV', seats: 4, isAvailable: true, price: 220 }
+  ]
+
   // ✅ STATES
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
@@ -234,6 +253,20 @@ const Menu = () => {
     return matchCategory && matchSearch
   })
 
+  let dynamicTitle = 'Menu'
+
+  if (selectedCategory !== 'All') {
+    dynamicTitle = selectedCategory
+  } else if (searchTerm && filteredItems.length > 0) {
+    dynamicTitle = filteredItems[0].menuCategory
+    // console.log('hello')
+  }
+
+  console.log('Filtered Items:', filteredItems)
+
+  //modal
+  const [isTakeOutOpen, setIsTakeOutOpen] = useState(false)
+
   return (
     <div className="bg-[#F5F5F5] font-sans">
       <main className="h-full flex flex-col w-full min-w-0">
@@ -244,7 +277,8 @@ const Menu = () => {
           </div>
           <div className="flex flex-wrap grid auto-cols-max grid-flow-col gap-3 justify-self-end ">
             <button
-              className="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 rounded-md hover:bg-purple-500
+              onClick={() => setIsTakeOutOpen(true)}
+              className="w-auto h-[42px] px-4 py-2 font-meduim border border-purple-500 text-purple-900 bg-White-600 rounded-md hover:bg-purple-500
                 transition-all duration-200 cursor-pointer shadow-sm
                 hover:shadow-xl hover:text-white"
             >
@@ -297,26 +331,54 @@ const Menu = () => {
 
             {/* ✅ CATEGORY BUTTONS */}
             <div className="flex gap-4 overflow-x-auto pb-4 ">
+              {/* re-render */}
               {uniqueCategories.map((category) => (
                 <button
                   key={category}
-                  onClick={() => setSelectedCategory(category)}
+                  //setClear
+                  onClick={() => {
+                    setSelectedCategory(category)
+                    setSearchTerm('')
+                  }}
                   className={`px-4 py-2 border rounded-md ${
                     selectedCategory === category
                       ? 'bg-purple-500 text-white'
-                      : 'text-purple-900 hover:bg-purple-500 hover:text-white transition-all duration-300 border-purple-500' // Target
+                      : 'text-purple-900 hover:bg-purple-500  hover:text-white transition-all duration-300 border-purple-500 hover:shadow-lg ' // Target
                   }`}
                 >
+                  {category}
+
                   {/* hover:bg-purple-500
                 transition-all duration-200 cursor-pointer shadow-sm
                 hover:shadow-xl hover:text-white */}
-                  {category}
                 </button>
               ))}
             </div>
+            {/* <div className="h-[50vh] overflow-y-auto pr-4 ">
+                {filteredItems.map((category) => (
+                  <div>
+                    <h1 className="text-2xl font-semibold mb-2">{category.menuCategory}</h1>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+                      {filteredItems.map((item) => (
+                        <div key={item.id} className="bg-white border rounded-xl shadow-sm p-2">
+                          <img
+                            className="w-full h-[102px] rounded-xl"
+                            src={item.menuImage}
+                            alt={item.menuTitle}
+                          />
+                          <h1 className="text-black text-lg font-semibold">{item.menuTitle}</h1>
+                          <p className="text-gray-500">{item.menuCategory}</p>
+                          <h2 className="font-semibold text-purple-600">{item.menuPrice}</h2>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div> */}
             <div className="h-[50vh] overflow-y-auto pr-4 ">
-              <p>Menu</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+              <h1 className="text-3xl font-medium text-black mb-1 font-sans">{dynamicTitle}</h1>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 ">
                 {filteredItems.map((item) => (
                   <div key={item.id} className="bg-white border rounded-xl shadow-sm p-2">
                     <img
@@ -324,7 +386,9 @@ const Menu = () => {
                       src={item.menuImage}
                       alt={item.menuTitle}
                     />
-                    <h1 className="text-black text-lg font-semibold">{item.menuTitle}</h1>
+                    <h1 className="text-black text-lg font-semibold content-center">
+                      {item.menuTitle}
+                    </h1>
                     <p className="text-gray-500">{item.menuCategory}</p>
                     <h2 className="font-semibold text-purple-600">{item.menuPrice}</h2>
                   </div>
@@ -335,6 +399,54 @@ const Menu = () => {
             {/* ✅ DISPLAY FILTERED ITEMS */}
           </div>
         </div>
+        {isTakeOutOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            {/* Modal Box */}
+            <div className="bg-white w-[956px] h-[692px] rounded-lg shadow-lg p-6 relative">
+              {/* Close Button */}
+              <button
+                onClick={() => setIsTakeOutOpen(false)}
+                className="absolute top-3 right-3 text-gray-500 hover:text-black text-lg"
+              >
+                ✕
+              </button>
+
+              <h2 className="text-xl font-semibold mb-4">Select Order</h2>
+
+              <div className="h-[50vh] overflow-y-auto pr-4 ">
+                <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-5 gap-3">
+                  {tables.map((item) => (
+                    <div key={item.id} className=" border rounded-xl shadow-sm p-2 ">
+                      <div className="place-self-center">
+                        <p
+                          // className={`font-medium text-xs place-self-center ${
+                          //   item.isAvailable === 'Available'? 'text-green' : 'text-red'
+                          // }
+                          // `}
+                          className={`font-medium text-xs place-self-center ${
+                            item.isAvailable ? 'text-green-900' : 'text-red-900 ' // Target
+                          }`}
+                        >
+                          <span className="text-2xl">•</span>
+                          {item.isAvailable ? ' Available' : ' Occupied'}
+                        </p>
+
+                        <img
+                          className="w-[92px] h-[60px] rounded-xl"
+                          src={tableIcon}
+                          alt=" Table Icon"
+                        />
+                        <h1 className="text-black text-base font-semibold place-self-center">
+                          {item.name}
+                        </h1>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )
