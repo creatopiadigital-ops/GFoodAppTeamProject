@@ -4,22 +4,7 @@ import { useCurrentTime } from '../hooks/useCurrentTime'
 
 export default function OrderCard({ order, onView }) {
   const isIncoming = (order.status || '').toLowerCase() === 'incoming'
-  // const createdDate = new Date(order.createdAt)
 
-  // const formattedDate = createdDate.toLocaleDateString('en-US', {
-  //   month: 'short',
-  //   day: 'numeric',
-  //   year: 'numeric'
-  // })
-  // const [now, setNow] = useState(new Date())
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setNow(new Date())
-  //   }, 60000)
-
-  //   return () => clearInterval(interval)
-  // }, [])
   const currentTime = useCurrentTime()
 
   function getTimeAgo(dateString) {
@@ -36,15 +21,11 @@ export default function OrderCard({ order, onView }) {
     if (diffHours < 24) return `${diffHours} hr ago`
     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
   }
-  // const formattedTime = createdDate.toLocaleTimeString('en-US', {
-  //   hour: '2-digit',
-  //   minute: '2-digit'
-  // })
 
   const timeAgo = getTimeAgo(order.createdAt)
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div className=" rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
       {/* Top Row */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
