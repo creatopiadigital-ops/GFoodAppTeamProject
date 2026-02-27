@@ -400,9 +400,9 @@ const Menu = () => {
           </div>
         </div>
         {isTakeOutOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
             {/* Modal Box */}
-            <div className="bg-white w-[956px] h-[692px] rounded-lg shadow-lg p-6 relative">
+            <div className="bg-white w-[956px] h-[692px] rounded-lg shadow-lg p-6 relative m-2">
               {/* Close Button */}
               <button
                 onClick={() => setIsTakeOutOpen(false)}
@@ -413,7 +413,7 @@ const Menu = () => {
 
               <h2 className="text-xl font-semibold mb-4">Select Order</h2>
 
-              <div className="h-[50vh] overflow-y-auto pr-4 ">
+              <div className="h-[50vh] overflow-y-auto ">
                 <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-5 gap-3">
                   {tables.map((item) => (
                     <div key={item.id} className=" border rounded-xl shadow-sm p-2 ">
@@ -442,6 +442,10 @@ const Menu = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+                <div className="grid grid-cols-2 ">
+                  <button> Sample</button>
+                  <button> Sample</button>
                 </div>
               </div>
             </div>
