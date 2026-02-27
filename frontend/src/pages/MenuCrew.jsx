@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import MenuItemCard from '../components/MenuItemCard'
 // Meals
 import Menu1 from '../images/Chicken.png'
 import Menu2 from '../images/Karekare.png'
@@ -36,17 +37,18 @@ import Menu27 from '../images/add/kimchi.png'
 import Menu28 from '../images/add/cheese.png'
 import Menu29 from '../images/add/pork.png'
 import Menu30 from '../images/add/beef.png'
+import check from '../assets/icons/check.svg'
 
-const CATEGORIES = [
-  'All',
-  'Meals',
-  'Seafood',
-  'Desserts',
-  'Sizzling',
-  'Beverages',
-  'Samgyupsal',
-  'AddOns'
-]
+// const CATEGORIES = [
+//   'All',
+//   'Meals',
+//   'Seafood',
+//   'Desserts',
+//   'Sizzling',
+//   'Beverages',
+//   'Samgyupsal',
+//   'AddOns'
+// ]
 
 function formatPHP(n) {
   const num = Number(n || 0)
@@ -57,6 +59,7 @@ export default function MenuCrew() {
   const [activeCategory, setActiveCategory] = useState('All')
   const [search, setSearch] = useState('')
   const [ordersOpen, setOrdersOpen] = useState(false)
+  const [orderConfirmed, setOrderConfirmed] = useState(false)
 
   const [cart, setCart] = useState({})
 
@@ -175,7 +178,7 @@ export default function MenuCrew() {
       menuPrice: 550
     },
 
-    { id: 25, menuImage: Menu25, menuTitle: 'Plain Rice', menuCategory: 'AddOns', menuPrice: 90 },
+    { id: 25, menuImage: Menu25, menuTitle: 'Plain Rice', menuCategory: 'AddOns', menuPrice: 1990 },
     { id: 26, menuImage: Menu26, menuTitle: 'Garlic Rice', menuCategory: 'AddOns', menuPrice: 120 },
     { id: 27, menuImage: Menu27, menuTitle: 'Kimchi', menuCategory: 'AddOns', menuPrice: 120 },
     { id: 28, menuImage: Menu28, menuTitle: 'Cheese Dip', menuCategory: 'AddOns', menuPrice: 150 },
@@ -190,10 +193,17 @@ export default function MenuCrew() {
       id: 30,
       menuImage: Menu30,
       menuTitle: 'Beef Samgyupsal',
-      menuCategory: 'AddOns',
+      menuCategory: 'Others',
       menuPrice: 150
     }
   ]
+  const uniqueCategories = ['All', ...new Set(menuItems.map((item) => item.menuCategory))]
+
+  const CATEGORIES = uniqueCategories.sort((a, b) => {
+    if (a === 'All') return -1
+    if (b === 'All') return 1
+    return a.localeCompare(b)
+  })
 
   const cartCount = useMemo(() => Object.values(cart).reduce((sum, qty) => sum + qty, 0), [cart])
 
@@ -226,18 +236,24 @@ export default function MenuCrew() {
     return ordered
   }, [filteredItems])
 
-  function inc(itemId) {
-    setCart((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }))
-  }
+  // function inc(itemId) {
+  //   setCart((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }))
+  // }
 
-  function dec(itemId) {
-    setCart((prev) => {
-      const next = { ...prev }
-      const current = next[itemId] || 0
-      if (current <= 1) delete next[itemId]
-      else next[itemId] = current - 1
-      return next
-    })
+  // function dec(itemId) {
+  //   setCart((prev) => {
+  //     const next = { ...prev }
+  //     const current = next[itemId] || 0
+  //     if (current <= 1) delete next[itemId]
+  //     else next[itemId] = current - 1
+  //     return next
+  //   })
+  // }
+
+  function placeOrder() {
+    setOrdersOpen(false)
+    setOrderConfirmed(true)
+    setCart({})
   }
 
   const cartLines = useMemo(() => {
@@ -256,18 +272,25 @@ export default function MenuCrew() {
   }, [cart, menuItems])
 
   const cartTotal = useMemo(() => cartLines.reduce((sum, l) => sum + l.lineTotal, 0), [cartLines])
-
+  const add = (id) => setCart((p) => ({ ...p, [id]: (p[id] || 0) + 1 }))
+  const inc = (id) => setCart((p) => ({ ...p, [id]: (p[id] || 0) + 1 }))
+  const dec = (id) =>
+    setCart((p) => {
+      const next = { ...p }
+      const cur = next[id] || 0
+      if (cur <= 1) delete next[id]
+      else next[id] = cur - 1
+      return next
+    })
   return (
     <div className="bg-[#F5F5F5] font-sans">
+      {/* {showPaymentPage && orderDetails ? () : ()} */}
       <main className="h-full w-full min-w-0">
-        {/* Header row (no back button) */}
         <div className="flex items-start justify-between gap-4 mb-6">
           <div>
             <h1 className="text-3xl font-semibold text-black mb-1">MENU</h1>
-            <p className="mt-2 text-sm text-gray-600">
-              Table Number:
-              <p className="mt-2 text-lg text-gray-900">T-1</p>
-            </p>
+            <p className="mt-2 text-sm text-gray-600"> Table Number:</p>
+            <p className="mt-2 text-lg font-semibold text-gray-900">T-1</p>
           </div>
 
           <button
@@ -283,11 +306,8 @@ export default function MenuCrew() {
           </button>
         </div>
 
-        {/* Main white container */}
         <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
-          {/* Search + Tabs */}
           <div className="flex flex-col gap-4">
-            {/* Search */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg
@@ -313,7 +333,6 @@ export default function MenuCrew() {
               />
             </div>
 
-            {/* Category Tabs */}
             <div className="flex gap-3 overflow-x-auto pb-2">
               {CATEGORIES.map((category) => (
                 <button
@@ -331,9 +350,7 @@ export default function MenuCrew() {
             </div>
           </div>
 
-          {/* Content Scroll Area */}
           <div className="mt-6 h-[65vh] overflow-y-auto pr-2">
-            {/* ✅ ALL = show headings/sections */}
             {activeCategory === 'All' ? (
               <div className="space-y-8">
                 {grouped.map(([category, items]) => (
@@ -342,105 +359,112 @@ export default function MenuCrew() {
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
                       {items.map((item) => {
-                        const qty = cart[item.id] || 0
-
                         return (
-                          <div
+                          <MenuItemCard
                             key={item.id}
-                            className="relative rounded-2xl border border-gray-200 bg-white p-3 shadow-sm"
-                          >
-                            {/* Qty badge (top-left like your screenshot) */}
-                            {qty > 0 ? (
-                              <span className="absolute top-3 left-3 z-10 min-w-[22px] h-[22px] px-1 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center">
-                                {qty}
-                              </span>
-                            ) : null}
-
-                            {/* Image (no stretch) */}
-                            <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-gray-100">
-                              <img
-                                src={item.menuImage}
-                                alt={item.menuTitle}
-                                className="w-full h-full object-cover"
-                                loading="lazy"
-                              />
-                            </div>
-
-                            <div className="mt-3">
-                              <p className="text-sm font-semibold text-gray-900 line-clamp-1">
-                                {item.menuTitle}
-                              </p>
-                              <p className="text-xs text-gray-500">{item.menuCategory}</p>
-
-                              <div className="mt-2 flex items-center justify-between">
-                                <p className="text-sm font-semibold text-purple-600">
-                                  {formatPHP(item.menuPrice)}
-                                </p>
-
-                                {/* Plus button */}
-                                <button
-                                  onClick={() => inc(item.id)}
-                                  className="h-8 w-8 rounded-lg bg-purple-600 text-white text-lg flex items-center justify-center hover:bg-purple-700"
-                                  aria-label="Add item"
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
-                          </div>
+                            item={item}
+                            qty={cart[item.id] || 0}
+                            onInc={inc}
+                            onDec={dec}
+                          />
                         )
+                        //   const qty = cart[item.id] || 0
+                        //   return (
+                        //     <div
+                        //       key={item.id}
+                        //       className="relative rounded-2xl border border-gray-200 bg-white p-3 shadow-sm"
+                        //     >
+                        //       {qty > 0 ? (
+                        //         <span className="absolute top-3 left-3 z-10 min-w-[22px] h-[22px] px-1 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center">
+                        //           {qty}
+                        //         </span>
+                        //       ) : null}
+                        //       <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-gray-100">
+                        //         <img
+                        //           src={item.menuImage}
+                        //           alt={item.menuTitle}
+                        //           className="w-full h-full object-cover"
+                        //           loading="lazy"
+                        //         />
+                        //       </div>
+                        //       <div className="mt-3">
+                        //         <p className="text-sm font-semibold text-gray-900 line-clamp-1">
+                        //           {item.menuTitle}
+                        //         </p>
+                        //         <p className="text-xs text-gray-500">{item.menuCategory}</p>
+                        //         <div className="mt-2 flex items-center justify-between">
+                        //           <p className="text-sm font-semibold text-purple-600">
+                        //             {formatPHP(item.menuPrice)}
+                        //           </p>
+                        //           <button
+                        //             onClick={() => inc(item.id)}
+                        //             className="h-8 w-8 rounded-lg bg-purple-600 text-white text-lg flex items-center justify-center hover:bg-purple-700"
+                        //             aria-label="Add item"
+                        //           >
+                        //             +
+                        //           </button>
+                        //         </div>
+                        //       </div>
+                        //     </div>
+                        //   )
                       })}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              /* ✅ Category selected = show only that category (no need for headings) */
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
                 {filteredItems.map((item) => {
                   const qty = cart[item.id] || 0
 
                   return (
-                    <div
+                    <MenuItemCard
                       key={item.id}
-                      className="relative rounded-2xl border border-gray-200 bg-white p-3 shadow-sm"
-                    >
-                      {qty > 0 ? (
-                        <span className="absolute top-3 left-3 z-10 min-w-[22px] h-[22px] px-1 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center">
-                          {qty}
-                        </span>
-                      ) : null}
+                      item={item}
+                      qty={cart[item.id] || 0}
+                      onInc={inc}
+                      onDec={dec}
+                    />
+                    // <div
+                    //   key={item.id}
+                    //   className="relative rounded-2xl border border-gray-200 bg-white p-3 shadow-sm"
+                    // >
+                    //   {qty > 0 ? (
+                    //     <span className="absolute top-3 left-3 z-10 min-w-[22px] h-[22px] px-1 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center">
+                    //       {qty}
+                    //     </span>
+                    //   ) : null}
 
-                      <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-gray-100">
-                        <img
-                          src={item.menuImage}
-                          alt={item.menuTitle}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      </div>
+                    //   <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-gray-100">
+                    //     <img
+                    //       src={item.menuImage}
+                    //       alt={item.menuTitle}
+                    //       className="w-full h-full object-cover"
+                    //       loading="lazy"
+                    //     />
+                    //   </div>
 
-                      <div className="mt-3">
-                        <p className="text-sm font-semibold text-gray-900 line-clamp-1">
-                          {item.menuTitle}
-                        </p>
-                        <p className="text-xs text-gray-500">{item.menuCategory}</p>
+                    //   <div className="mt-3">
+                    //     <p className="text-sm font-semibold text-gray-900 line-clamp-1">
+                    //       {item.menuTitle}
+                    //     </p>
+                    //     <p className="text-xs text-gray-500">{item.menuCategory}</p>
 
-                        <div className="mt-2 flex items-center justify-between">
-                          <p className="text-sm font-semibold text-purple-600">
-                            {formatPHP(item.menuPrice)}
-                          </p>
+                    //     <div className="mt-2 flex items-center justify-between">
+                    //       <p className="text-sm font-semibold text-purple-600">
+                    //         {formatPHP(item.menuPrice)}
+                    //       </p>
 
-                          <button
-                            onClick={() => inc(item.id)}
-                            className="h-8 w-8 rounded-lg bg-purple-600 text-white text-lg flex items-center justify-center hover:bg-purple-700"
-                            aria-label="Add item"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    //       <button
+                    //         onClick={() => inc(item.id)}
+                    //         className="h-8 w-8 rounded-lg bg-purple-600 text-white text-lg flex items-center justify-center hover:bg-purple-700"
+                    //         aria-label="Add item"
+                    //       >
+                    //         +
+                    //       </button>
+                    //     </div>
+                    //   </div>
+                    // </div>
                   )
                 })}
               </div>
@@ -449,23 +473,20 @@ export default function MenuCrew() {
         </div>
       </main>
 
-      {/* Right Drawer: View Orders */}
       {ordersOpen ? (
         <div className="fixed inset-0 z-50">
-          {/* Backdrop */}
           <button
             className="absolute inset-0 bg-black/40"
             onClick={() => setOrdersOpen(false)}
             aria-label="Close orders"
           />
 
-          {/* Panel */}
           <aside className="absolute right-0 top-0 h-full w-full max-w-[520px] bg-white shadow-2xl rounded-l-3xl flex flex-col">
             <div className="p-6 border-b border-gray-100 flex items-start justify-between">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900">Current Order</h3>
                 <p className="mt-2 text-sm text-gray-600">
-                  Table Number: <span className="font-semibold text-gray-900">T-1</span>
+                  Table Number: <span className="font-bold text-gray-900">T-1</span>
                 </p>
               </div>
 
@@ -532,12 +553,36 @@ export default function MenuCrew() {
               <button
                 className="mt-5 w-full h-12 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 disabled:bg-gray-300"
                 disabled={cartLines.length === 0}
-                onClick={() => alert('Place Order (hook this to backend later)')}
+                onClick={placeOrder}
               >
                 Place Order
               </button>
             </div>
           </aside>
+        </div>
+      ) : null}
+      {orderConfirmed ? (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <button
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setOrderConfirmed(false)}
+            aria-label="Close confirmation"
+          />
+
+          <div className="relative w-[92%] max-w-[420px] rounded-3xl bg-white p-6 shadow-2xl">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100">
+              <img src={check} alt="Checkmark" className="h-14 w-14" />
+            </div>
+
+            <p className="mt-4 text-center text-lg font-semibold text-gray-900">Order Confirmed</p>
+
+            <button
+              onClick={() => setOrderConfirmed(false)}
+              className="mt-6 w-full h-12 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700"
+            >
+              Done
+            </button>
+          </div>
         </div>
       ) : null}
     </div>
