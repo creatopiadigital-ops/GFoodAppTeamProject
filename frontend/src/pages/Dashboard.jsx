@@ -5,6 +5,7 @@ import DashboardContent from './DashboardContent'
 import TablesManagement from './TablesManagement'
 import Menu from './Menu'
 import MenuCrew from './MenuCrew'
+import Orders from './Orders'
 import DashboardHeader from '../components/DashboardHeader'
 import DashboardSidebar from '../components/DashboardSidebar'
 
@@ -72,6 +73,8 @@ const Dashboard = ({ setIsAuthenticated }) => {
             <Menu />
           ) : activeSection === 'crew' ? (
             <MenuCrew />
+          ) : activeSection === 'orders' ? (
+            <Orders />
           ) : (
             <DashboardContent />
           )}
