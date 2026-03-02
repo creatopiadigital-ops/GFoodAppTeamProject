@@ -218,20 +218,20 @@ const Menu = () => {
   ]
 
   const tables = [
-    { id: 1, name: 'Table 1', type: 'Food', seats: 4, isAvailable: true, price: 100 },
-    { id: 2, name: 'Table 2', type: 'Food', seats: 4, isAvailable: true, price: 120 },
-    { id: 3, name: 'Table 3', type: 'Food', seats: 6, isAvailable: false, price: 150 },
-    { id: 4, name: 'Table 4', type: 'Food', seats: 4, isAvailable: false, price: 100 },
-    { id: 5, name: 'Table 1', type: 'Samgyupsal', seats: 4, isAvailable: true, price: 200 },
-    { id: 6, name: 'Table 2', type: 'Samgyupsal', seats: 6, isAvailable: false, price: 250 },
-    { id: 7, name: 'Table 3', type: 'Samgyupsal', seats: 4, isAvailable: true, price: 180 },
-    { id: 8, name: 'Table 4', type: 'Samgyupsal', seats: 4, isAvailable: false, price: 150 },
+    { id: 1, name: 'Table F-1', type: 'Food', seats: 4, isAvailable: true, price: 100 },
+    { id: 2, name: 'Table F-2', type: 'Food', seats: 4, isAvailable: true, price: 120 },
+    { id: 3, name: 'Table F-3', type: 'Food', seats: 6, isAvailable: false, price: 150 },
+    { id: 4, name: 'Table F-4', type: 'Food', seats: 4, isAvailable: false, price: 100 },
+    { id: 5, name: 'Table S-1', type: 'Samgyup', seats: 4, isAvailable: true, price: 200 },
+    { id: 6, name: 'Table S-2', type: 'Samgyup', seats: 6, isAvailable: false, price: 250 },
+    { id: 7, name: 'Table S-3', type: 'Samgyup', seats: 4, isAvailable: true, price: 180 },
+    { id: 8, name: 'Table S-4', type: 'Samgyup', seats: 4, isAvailable: false, price: 150 },
     { id: 9, name: 'Table 1', type: 'KTV', seats: 6, isAvailable: false, price: 300 },
     { id: 10, name: 'Table 2', type: 'KTV', seats: 4, isAvailable: true, price: 250 },
     { id: 11, name: 'Table 3', type: 'KTV', seats: 4, isAvailable: true, price: 200 },
     { id: 12, name: 'Table 4', type: 'KTV', seats: 6, isAvailable: false, price: 350 },
-    { id: 13, name: 'Table 5', type: 'Food', seats: 4, isAvailable: true, price: 120 },
-    { id: 14, name: 'Table 6', type: 'Samgyupsal', seats: 6, isAvailable: true, price: 280 },
+    { id: 13, name: 'Table F-5', type: 'Food', seats: 4, isAvailable: true, price: 120 },
+    { id: 14, name: 'Table S-6', type: 'Samgyup', seats: 6, isAvailable: true, price: 280 },
     { id: 15, name: 'Table7', type: 'KTV', seats: 4, isAvailable: true, price: 220 }
   ]
 
@@ -246,26 +246,55 @@ const Menu = () => {
   const filteredItems = MenuItems.filter((item) => {
     const matchCategory = selectedCategory === 'All' || item.menuCategory === selectedCategory
 
-    const matchSearch =
+    const matchModalSearch =
       item.menuCategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.menuTitle.toLowerCase().includes(searchTerm.toLowerCase())
 
-    return matchCategory && matchSearch
+    return matchCategory && matchModalSearch
   })
 
-  let dynamicTitle = 'Menu'
+  //Modal Function
+  const [searchModal, setSearchModal] = useState('')
 
+  const [checked, setChecked] = useState({
+    Food: false,
+    Samgyup: false,
+    KTV: false
+  })
+
+  const selectedTypes = Object.keys(checked).filter((key) => checked[key])
+
+  const filteredModal = tables.filter((item) => {
+    const value = searchModal.toLowerCase().trim()
+
+    const selectedTypes = Object.keys(checked).filter((key) => checked[key])
+
+    // ✅ Type filter
+    const matchesType = selectedTypes.length === 0 || selectedTypes.includes(item.type)
+
+    // ✅ Status text
+    const statusText = item.isAvailable ? 'available' : 'occupied'
+
+    // ✅ Search filter
+    const matchesSearch =
+      value === '' ||
+      item.name.toLowerCase().includes(value) ||
+      statusText.toLowerCase().includes(value)
+
+    // ✅ Combine both
+    return matchesType && matchesSearch
+  })
+  //modal
+  const [isTakeOutOpen, setIsTakeOutOpen] = useState(false)
+
+  //Set InputBox Clear
+  let dynamicTitle = 'Menu'
   if (selectedCategory !== 'All') {
     dynamicTitle = selectedCategory
   } else if (searchTerm && filteredItems.length > 0) {
     dynamicTitle = filteredItems[0].menuCategory
     // console.log('hello')
   }
-
-  console.log('Filtered Items:', filteredItems)
-
-  //modal
-  const [isTakeOutOpen, setIsTakeOutOpen] = useState(false)
 
   return (
     <div className="bg-[#F5F5F5] font-sans">
@@ -402,7 +431,7 @@ const Menu = () => {
         {isTakeOutOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             {/* Modal Box */}
-            <div className="bg-white w-[956px] h-[692px] rounded-lg shadow-lg p-6 relative">
+            <div className="bg-white w-[956px] h-[620px] rounded-lg shadow-lg p-6 relative">
               {/* Close Button */}
               <button
                 onClick={() => setIsTakeOutOpen(false)}
@@ -411,20 +440,102 @@ const Menu = () => {
                 ✕
               </button>
 
-              <h2 className="text-xl font-semibold mb-4">Select Order</h2>
+              {/* Modal Area - Take out*/}
+              <p className="">Table Legend:</p>
 
-              <div className="h-[50vh] overflow-y-auto pr-4 ">
-                <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-5 gap-3">
-                  {tables.map((item) => (
-                    <div key={item.id} className=" border rounded-xl shadow-sm p-2 ">
+              <div className="flex flex-cols-2 items-center gap-20 m-2 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search by name or availability"
+                  value={searchModal}
+                  onChange={(e) => setSearchModal(e.target.value)}
+                  className="w-full max-w-xs sm:max-w-sm md:max-w-md pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-base font-normal"
+                />
+
+                <div
+                  onClick={() =>
+                    setChecked({
+                      ...checked,
+                      Food: !checked.Food
+                    })
+                  }
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <div
+                    className={`w-6 h-6 border-2 rounded flex items-center justify-center 
+                  ${checked.Food ? 'bg-purple-600 border-purple-600' : 'bg-white border-gray-400'}
+                `}
+                  >
+                    {checked.Food && <span className="text-white text-sm">✓</span>}
+                  </div>
+
+                  <span className="text-base font-medium select-none">Food</span>
+                </div>
+                {/* Samgyup Checkbox */}
+                <div
+                  onClick={() =>
+                    setChecked({
+                      ...checked,
+                      Samgyup: !checked.Samgyup
+                    })
+                  }
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <div
+                    className={`w-6 h-6 border-2 rounded flex items-center justify-center 
+                  ${checked.Samgyup ? 'bg-purple-600 border-purple-600' : 'bg-white border-gray-400'}
+                `}
+                  >
+                    {checked.Samgyup && <span className="text-white text-sm">✓</span>}
+                  </div>
+
+                  <span className="text-base font-medium select-none">Samgyup</span>
+                </div>
+                {/* KTV */}
+                <div
+                  onClick={() =>
+                    setChecked({
+                      ...checked,
+                      KTV: !checked.KTV
+                    })
+                  }
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <div
+                    className={`w-6 h-6 border-2 rounded flex items-center justify-center 
+                  ${checked.KTV ? 'bg-purple-600 border-purple-600' : 'bg-white border-gray-400'}
+                `}
+                  >
+                    {checked.KTV && <span className="text-white text-sm">✓</span>}
+                  </div>
+
+                  <span className="text-base font-medium select-none">KTV</span>
+                </div>
+              </div>
+
+              <div className="h-[500px]">
+                <div className="h-[430px] grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-5 gap-3 overflow-y-auto mb-2">
+                  {filteredModal.map((item) => (
+                    <div key={item.id} className="border rounded-xl shadow-sm p-2">
                       <div className="place-self-center">
                         <p
-                          // className={`font-medium text-xs place-self-center ${
-                          //   item.isAvailable === 'Available'? 'text-green' : 'text-red'
-                          // }
-                          // `}
                           className={`font-medium text-xs place-self-center ${
-                            item.isAvailable ? 'text-green-900' : 'text-red-900 ' // Target
+                            item.isAvailable ? 'text-green-900' : 'text-red-900'
                           }`}
                         >
                           <span className="text-2xl">•</span>
@@ -434,14 +545,21 @@ const Menu = () => {
                         <img
                           className="w-[92px] h-[60px] rounded-xl"
                           src={tableIcon}
-                          alt=" Table Icon"
+                          alt="Table Icon"
                         />
+
                         <h1 className="text-black text-base font-semibold place-self-center">
                           {item.name}
                         </h1>
                       </div>
                     </div>
                   ))}
+                </div>
+                <div className="grid grid-cols-2 gap-2 m-3">
+                  <button className="border-1 bg-gray-300 rounded-md h-[44px]">Cancel</button>
+                  <button className="border-1 bg-gray-300 rounded-md h-[44px]">
+                    Apply Discount
+                  </button>
                 </div>
               </div>
             </div>
