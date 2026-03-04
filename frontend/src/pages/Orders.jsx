@@ -465,6 +465,11 @@ const Orders = () => {
     )
   }
 
+  const closeBillOutModalAndPanel = () => {
+    setShowBillOutComplete(false)
+    setSelectedOrder(null)
+  }
+
   return (
     <div>
       {/* Header */}
@@ -664,7 +669,7 @@ const Orders = () => {
           {/* backdrop */}
           <button
             className="absolute inset-0 bg-black/40"
-            onClick={() => setShowBillOutComplete(false)}
+            onClick={closeBillOutModalAndPanel}
             aria-label="Close"
           />
 
@@ -679,7 +684,7 @@ const Orders = () => {
 
               <h3 className="mt-4 text-base font-semibold text-gray-900"> Order Print</h3>
               <button
-                onClick={() => setShowBillOutComplete(false)}
+                onClick={closeBillOutModalAndPanel}
                 className="mt-5 w-full rounded-xl bg-purple-600 py-3 text-sm font-semibold text-white hover:bg-purple-700"
               >
                 Done
