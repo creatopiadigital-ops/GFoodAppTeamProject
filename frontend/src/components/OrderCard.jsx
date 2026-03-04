@@ -25,7 +25,7 @@ export default function OrderCard({ order, onView }) {
   const timeAgo = getTimeAgo(order.createdAt)
 
   return (
-    <div className=" rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
+    <div className=" relative rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
       {/* Top Row */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
