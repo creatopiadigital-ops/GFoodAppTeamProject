@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import OrderCard from '../components/OrderCard'
+import BillOut from '../components/BillOut'
 import search_icon from '../assets/icons/search.svg'
 import { formatTime } from '../utils/timeFormat'
 import { formatDate } from '../utils/dateFormat'
@@ -165,176 +166,137 @@ const Orders = () => {
       (view === 'active' && selectedStatus === 'active'))
 
   const handlePrintBillOut = () => {
+    if (!selectedOrder) return
+
     const printContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Order Summary</title>
-          <style>
-            @media print {
-              @page {
-                size: 80mm auto;
-                margin: 0;
-              }
-              body {
-                margin: 0;
-                padding: 10px;
-                font-size: 12px;
-              }
-            }
-            body {
-              font-size: 12px;
-              padding: 10px;
-              max-width: 80mm;
-              margin: 0 auto;
-              font-family: Arial, sans-serif;
-            }
-            .header {
-              text-align: center;
-              margin-bottom: 15px;
-            }
-            .header h2 {
-              margin: 0;
-              font-size: 18px;
-            }
-            .order-info {
-              margin-bottom: 10px;
-              font-size: 11px;
-            }
-            .order-info strong {
-              display: inline-block;
-              min-width: 80px;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              margin: 15px 0;
-            }
-            th {
-              text-align: left;
-              padding: 5px;
-              border-bottom: 1px solid #000;
-              font-size: 11px;
-              font-weight: bold;
-            }
-            td {
-              padding: 5px;
-              font-size: 11px;
-            }
-            .text-right {
-              text-align: right;
-            }
-            .text-center {
-              text-align: center;
-            }
-            .total-row {
-              border-top: 2px solid #000;
-              font-weight: bold;
-              margin-top: 10px;
-            }
-            .total-row td {
-              padding-top: 10px;
-              font-size: 13px;
-            }
-            .separator {
-              border-top: 1px dashed #ccc;
-              margin: 15px 0;
-            }
-            .footer {
-              text-align: center;
-              font-size: 10px;
-              color: #666;
-              margin-top: 15px;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h2>Order Summary</h2>
-          </div>
-  
-          <div class="order-info">
-            <strong>Order #:</strong> ${selectedOrder.id || 'N/A'}<br>
-            <strong>Table:</strong> ${selectedOrder.table || 'N/A'}<br>
-            <strong>Service:</strong> ${selectedOrder.service || 'N/A'}<br>
-            <strong>Date:</strong> ${formatDate(selectedOrder.createdAt)}<br>
-            <strong>Time:</strong> ${formatTime(selectedOrder.createdAt)}
-         
-          </div>
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Order Summary</title>
+        <style>
+          @media print {
+            @page { size: 80mm auto; margin: 0; }
+            body { margin: 0; padding: 10px; font-size: 12px; }
+          }
+          body {
+            font-size: 12px;
+            padding: 10px;
+            max-width: 80mm;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+          }
+          .header { text-align: center; margin-bottom: 15px; }
+          .header h2 { margin: 0; font-size: 18px; }
+          .order-info { margin-bottom: 10px; font-size: 11px; }
+          .order-info strong { display: inline-block; min-width: 80px; }
+          table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+          th {
+            text-align: left;
+            padding: 5px;
+            border-bottom: 1px solid #000;
+            font-size: 11px;
+            font-weight: bold;
+          }
+          td { padding: 5px; font-size: 11px; }
+          .text-right { text-align: right; }
+          .text-center { text-align: center; }
+          .total-row { border-top: 2px solid #000; font-weight: bold; margin-top: 10px; }
+          .total-row td { padding-top: 10px; font-size: 13px; }
+          .separator { border-top: 1px dashed #ccc; margin: 15px 0; }
+          .footer { text-align: center; font-size: 10px; color: #666; margin-top: 15px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h2>Order Summary</h2>
+        </div>
 
-          <div class="separator"></div>
+        <div class="order-info">
+          <strong>Order #:</strong> ${selectedOrder.id || 'N/A'}<br>
+          <strong>Table:</strong> ${selectedOrder.table || 'N/A'}<br>
+          <strong>Service:</strong> ${selectedOrder.service || 'N/A'}<br>
+          <strong>Date:</strong> ${formatDate(selectedOrder.createdAt)}<br>
+          <strong>Time:</strong> ${formatTime(selectedOrder.createdAt)}
+        </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th class="text-center">Qty</th>
-                <th class="text-right">Price</th>
-                <th class="text-right">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
- 
-              ${
-                selectedOrder.items && selectedOrder.items.length > 0
-                  ? selectedOrder.items
-                      .map((item) => {
-                        const quantity = item.qty || 0
-                        const price = item.price || 0
-                        const itemTotal = quantity * price
-                        return `
-                    <tr>
-                      <td>${item.name || ''}</td>
-                       <td class="text-center">${quantity}</td>
-                       <td class="text-right">${price.toLocaleString()}</td>
-                       <td class="text-right">${itemTotal.toLocaleString()}</td>
-                    </tr>
-                  `
-                      })
-                      .join('')
-                  : '<tr><td colspan="4" class="text-center">No items</td></tr>'
-              }
-            </tbody>
-            <tfoot>
-              <tr class="total-row">
-                <td colspan="3" class="text-right"><strong>TOTAL AMOUNT:</strong></td>
-                <td class="text-right">${formatter.format(totalAmount || 0)}</td>
-              </tr>
-            </tfoot>
-          </table>
+        <div class="separator"></div>
 
-          <div class="separator"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th class="text-center">Qty</th>
+              <th class="text-right">Price</th>
+              <th class="text-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${
+              selectedOrder.items && selectedOrder.items.length > 0
+                ? selectedOrder.items
+                    .map((item) => {
+                      const quantity = item.qty || 0
+                      const price = item.price || 0
+                      const itemTotal = quantity * price
+                      return `
+                        <tr>
+                          <td>${item.name || ''}</td>
+                          <td class="text-center">${quantity}</td>
+                          <td class="text-right">${price.toLocaleString()}</td>
+                          <td class="text-right">${itemTotal.toLocaleString()}</td>
+                        </tr>
+                      `
+                    })
+                    .join('')
+                : '<tr><td colspan="4" class="text-center">No items</td></tr>'
+            }
+          </tbody>
+          <tfoot>
+            <tr class="total-row">
+              <td colspan="3" class="text-right"><strong>TOTAL AMOUNT:</strong></td>
+              <td class="text-right">${formatter.format(totalAmount || 0)}</td>
+            </tr>
+          </tfoot>
+        </table>
 
-          <div class="footer">
-            Thank you for your order!
-          </div>
-        </body>
-      </html>
-    `
+        <div class="separator"></div>
 
-    // Open print window
+        <div class="footer">
+          Thank you for your order!
+        </div>
+      </body>
+    </html>
+  `
+
     const printWindow = window.open('', '_blank')
-    if (printWindow) {
-      printWindow.document.write(printContent)
-      printWindow.document.close()
+    if (!printWindow) {
+      alert('Pop-up blocked. Please allow pop-ups to print.')
+      return
+    }
 
-      // Wait for content to load, then print
-      printWindow.onload = () => {
+    printWindow.document.open()
+    printWindow.document.write(printContent)
+    printWindow.document.close()
+
+    printWindow.onload = () => {
+      setTimeout(() => {
+        printWindow.print()
+
+        // ✅ SHOW MODAL AFTER PRINT
+        setShowBillOutComplete(true)
+
         setTimeout(() => {
-          printWindow.print()
-
-          // Close the print window after print dialog
-          setTimeout(() => {
-            if (!printWindow.closed) {
-              printWindow.close()
-            }
-          }, 500)
-        }, 250)
-      }
+          if (!printWindow.closed) printWindow.close()
+        }, 500)
+      }, 250)
     }
   }
 
+  const [showBillOutComplete, setShowBillOutComplete] = useState(false)
+
   const handlePrintOrderSummary = () => {
+    if (!selectedOrder) return
+
     const createdAt = selectedOrder?.createdAt
     const service = selectedOrder?.service || '—'
     const table = (selectedOrder?.table || '—').replace('T-', 'T-')
@@ -400,7 +362,7 @@ const Orders = () => {
             gap: 10px;
             padding: 6px 0;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 300;
             color:#111;
           }
 
@@ -482,21 +444,53 @@ const Orders = () => {
       </body>
     </html>
   `
-
     const printWindow = window.open('', '_blank')
-    if (printWindow) {
-      printWindow.document.write(printContent)
-      printWindow.document.close()
+    if (!printWindow) return // popup blocked
 
-      printWindow.onload = () => {
+    printWindow.document.open()
+    printWindow.document.write(printContent)
+    printWindow.document.close()
+
+    printWindow.onload = () => {
+      setTimeout(() => {
+        printWindow.focus()
+        printWindow.print()
         setTimeout(() => {
-          printWindow.print()
-          setTimeout(() => {
-            if (!printWindow.closed) printWindow.close()
-          }, 500)
-        }, 250)
-      }
+          if (!printWindow.closed) printWindow.close()
+        }, 500)
+      }, 250)
     }
+  }
+
+  const [screen, setScreen] = useState('orders')
+  const [billoutOrder, setBilloutOrder] = useState(null)
+
+  const handlePayClick = () => {
+    if (!selectedOrder) return
+    setBilloutOrder(selectedOrder)
+    setScreen('billout')
+  }
+
+  if (screen === 'billout') {
+    return (
+      <BillOut
+        order={billoutOrder}
+        onBack={() => {
+          setScreen('orders')
+          setBilloutOrder(null)
+        }}
+        onComplete={() => {
+          setScreen('orders')
+          setBilloutOrder(null)
+          setSelectedOrder(null) // ✅ closes the current panel
+        }}
+      />
+    )
+  }
+
+  const closeBillOutModalAndPanel = () => {
+    setShowBillOutComplete(false)
+    setSelectedOrder(null)
   }
 
   return (
@@ -509,10 +503,10 @@ const Orders = () => {
 
       {/*  Wrapper becomes 2 columns */}
       <div
-        className={`mt-3 grid grid-cols-1 gap-6 ${selectedOrder ? '2xl:grid-cols-[1fr_380px]' : ''}`}
+        className={`mt-3 grid grid-cols-1 gap-6 ${selectedOrder ? '2xl:grid-cols-[1fr_380px]' : ''} relative`}
       >
         {/* Main Orders Container */}
-        <div className="w-full min-w-0 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
+        <div className=" w-full min-w-0 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5 relative">
           {/* Filter + Search */}
           <div className="m-2 flex gap-3 lg:flex-row lg:items-center">
             {/* Filters */}
@@ -586,90 +580,13 @@ const Orders = () => {
         {showPanel && (
           <>
             {/*  Overlay */}
-            <div onClick={handleClosePanel} className="fixed inset-0 z-40 bg-black/30 2xl:hidden" />
-
-            {/*  For Responsive Current Panel - bottom sheet panel */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-2xl border border-gray-200 bg-white p-5 shadow-xl 2xl:hidden">
-              {/* Header */}
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-semibold text-gray-900">Current Orders</h3>
-                <button
-                  onClick={handleClosePanel}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
-                >
-                  Close
-                </button>
-              </div>
-
-              <p className="mt-3 text-sm text-gray-700">
-                <span className="font-medium">Table Number:</span>{' '}
-                <span>{selectedOrder.table.replace('T-', '')}</span>
-              </p>
-
-              {/* Items + Amount header */}
-              <div className="mt-4 flex items-center justify-between text-sm font-semibold text-gray-900">
-                <span>Items</span>
-                <span>Amount</span>
-              </div>
-
-              {/* Items */}
-              <div className="mt-3 space-y-4">
-                {selectedOrder.items.map((item, idx) => (
-                  <div key={idx} className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-gray-900">{item.name}</p>
-                      <p className="text-xs text-gray-400">x{item.qty}</p>
-                    </div>
-
-                    <p className="text-sm text-gray-900">{peso(item.qty * item.price)}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Totals */}
-              <div className="mt-6 border-t pt-4">
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>Subtotal</span>
-                  <span>{peso(subtotal)}</span>
-                </div>
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>Discount</span>
-                  <span>{peso(discount)}</span>
-                </div>
-
-                <div className="mt-3 flex items-end justify-between">
-                  <span className="text-lg font-semibold text-gray-900">Total:</span>
-                  <span className="text-lg font-semibold text-gray-900">{peso(total)}</span>
-                </div>
-
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                  {selectedStatus === 'incoming' ? (
-                    <>
-                      <button
-                        onClick={handlePrintBillOut}
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-100 transition"
-                      >
-                        Bill Out
-                      </button>
-
-                      <button className="w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition">
-                        Pay
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={handlePrintOrderSummary}
-                      className="col-span-2 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition"
-                    >
-                      Print Order Summary
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
+            <div
+              onClick={handleClosePanel}
+              className="absolute inset-0 z-40 bg-black/30 2xl:hidden"
+            />
 
             {/*  Right sticky Current panel for 2xl */}
-            <div className="hidden 2xl:block h-fit rounded-2xl border border-gray-200 bg-white p-5 shadow-sm lg:sticky lg:top-6">
+            <div className="  z-50 bg-white rounded-2xl border p-5 h-fit">
               {/* Header */}
               <div className="flex items-center justify-between">
                 <h3 className="text-base font-semibold text-gray-900">Current Orders</h3>
@@ -685,7 +602,8 @@ const Orders = () => {
                 <span className="font-medium">Table Number:</span>{' '}
                 <span>{selectedOrder.table.replace('T-', '')}</span>
               </p>
-              {selectedStatus === 'active' ? (
+
+              {selectedStatus === 'active' || selectedStatus === 'incoming' ? (
                 <div className="mt-1 text-sm text-gray-700">
                   {/* Items + Amount header */}
                   <div className="mt-4 flex items-center justify-between text-sm font-semibold text-gray-900">
@@ -701,38 +619,36 @@ const Orders = () => {
                           <p className="text-sm text-gray-900">{item.name}</p>
                           <p className="text-xs text-gray-400">x{item.qty}</p>
                         </div>
-                        <p className="text-sm text-gray-900">{peso(total)}</p>
+                        <p className="text-sm text-gray-900">{peso(item.qty * item.price)}</p>
                       </div>
                     ))}
                   </div>
 
                   {/* Totals */}
-                  <div className="mt-6 border-t pt-4">
-                    <div className="flex justify-between text-sm text-gray-500">
-                      <span>Subtotal</span>
-                      <span>{peso(subtotal)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm text-gray-500">
-                      <span>Discount</span>
-                      <span>{peso(discount)}</span>
-                    </div>
-
-                    <div className="mt-3 flex items-end justify-between">
-                      <span className="text-lg font-semibold text-gray-900">Total:</span>
-                      <span className="text-lg font-semibold text-gray-900">{peso(total)}</span>
-                    </div>
-                    <div className="flex flex-cols gap-3 ">
+                  {selectedStatus === 'active' ? (
+                    <div className="flex gap-3">
                       <button
                         onClick={handlePrintBillOut}
                         className="mt-4 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition"
                       >
                         Bill Out
                       </button>
-                      <button className="mt-4 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition">
+
+                      <button
+                        onClick={handlePayClick}
+                        className="mt-4 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition"
+                      >
                         Pay
                       </button>
                     </div>
-                  </div>
+                  ) : (
+                    <button
+                      onClick={handlePrintOrderSummary}
+                      className="mt-4 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition"
+                    >
+                      Print Order Summary
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="mt-1 text-sm text-gray-700">
@@ -765,6 +681,36 @@ const Orders = () => {
           </>
         )}
       </div>
+
+      {showBillOutComplete && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center">
+          {/* backdrop */}
+          <button
+            className="absolute inset-0 bg-black/40"
+            onClick={closeBillOutModalAndPanel}
+            aria-label="Close"
+          />
+
+          {/* modal */}
+          <div className="relative w-[92%] max-w-[360px] rounded-2xl bg-white p-6 shadow-lg ring-1 ring-black/10">
+            <div className="flex flex-col items-center text-center">
+              <div className="grid h-14 w-14 place-items-center rounded-full bg-emerald-100">
+                <div className="grid h-10 w-10 place-items-center rounded-full bg-emerald-500 text-white">
+                  ✓
+                </div>
+              </div>
+
+              <h3 className="mt-4 text-base font-semibold text-gray-900"> Order Print</h3>
+              <button
+                onClick={closeBillOutModalAndPanel}
+                className="mt-5 w-full rounded-xl bg-purple-600 py-3 text-sm font-semibold text-white hover:bg-purple-700"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
