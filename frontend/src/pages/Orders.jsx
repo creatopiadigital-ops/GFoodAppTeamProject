@@ -295,6 +295,8 @@ const Orders = () => {
   const [showBillOutComplete, setShowBillOutComplete] = useState(false)
 
   const handlePrintOrderSummary = () => {
+    if (!selectedOrder) return
+
     const createdAt = selectedOrder?.createdAt
     const service = selectedOrder?.service || '—'
     const table = (selectedOrder?.table || '—').replace('T-', 'T-')
@@ -442,6 +444,22 @@ const Orders = () => {
       </body>
     </html>
   `
+    const printWindow = window.open('', '_blank')
+    if (!printWindow) return // popup blocked
+
+    printWindow.document.open()
+    printWindow.document.write(printContent)
+    printWindow.document.close()
+
+    printWindow.onload = () => {
+      setTimeout(() => {
+        printWindow.focus()
+        printWindow.print()
+        setTimeout(() => {
+          if (!printWindow.closed) printWindow.close()
+        }, 500)
+      }, 250)
+    }
   }
 
   const [screen, setScreen] = useState('orders')
@@ -460,6 +478,11 @@ const Orders = () => {
         onBack={() => {
           setScreen('orders')
           setBilloutOrder(null)
+        }}
+        onComplete={() => {
+          setScreen('orders')
+          setBilloutOrder(null)
+          setSelectedOrder(null) // ✅ closes the current panel
         }}
       />
     )
@@ -602,27 +625,15 @@ const Orders = () => {
                   </div>
 
                   {/* Totals */}
-                  <div className="mt-6 border-t pt-4">
-                    <div className="flex justify-between text-sm text-gray-500">
-                      <span>Subtotal</span>
-                      <span>{peso(subtotal)}</span>
-                    </div>
-                    <div className="flex justify-between text-sm text-gray-500">
-                      <span>Discount</span>
-                      <span>{peso(discount)}</span>
-                    </div>
-
-                    <div className="mt-3 flex items-end justify-between">
-                      <span className="text-lg font-semibold text-gray-900">Total:</span>
-                      <span className="text-lg font-semibold text-gray-900">{peso(total)}</span>
-                    </div>
-                    <div className="flex flex-cols gap-3 ">
+                  {selectedStatus === 'active' ? (
+                    <div className="flex gap-3">
                       <button
                         onClick={handlePrintBillOut}
                         className="mt-4 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition"
                       >
                         Bill Out
                       </button>
+
                       <button
                         onClick={handlePayClick}
                         className="mt-4 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition"
@@ -630,7 +641,14 @@ const Orders = () => {
                         Pay
                       </button>
                     </div>
-                  </div>
+                  ) : (
+                    <button
+                      onClick={handlePrintOrderSummary}
+                      className="mt-4 w-full rounded-xl bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition"
+                    >
+                      Print Order Summary
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="mt-1 text-sm text-gray-700">

@@ -3,10 +3,10 @@ import { formatDate } from '../utils/dateFormat'
 import money_icon from '../assets/icons/money-02.svg'
 import wallet_icon from '../assets/icons/wallet-01.svg'
 
-export default function BillOut({ order, onBack }) {
+export default function BillOut({ order, onBack, onComplete }) {
   if (!order) return null
 
-  // ✅ MUST BE TOP-LEVEL (hooks)
+  // ✅ state
   const [customerName, setCustomerName] = useState('')
   const [customerId, setCustomerId] = useState('')
   const [paymentMethod, setPaymentMethod] = useState(null)
@@ -29,8 +29,6 @@ export default function BillOut({ order, onBack }) {
   // if (discountType === 'override') discount = subtotal * 0.10
 
   const total = subtotal + vat - discount
-
-  // ✅ change (never negative)
   const change = Math.max(Number(cashReceived || 0) - total, 0)
 
   // ✅ handlers
@@ -43,7 +41,7 @@ export default function BillOut({ order, onBack }) {
   }
 
   const handleExactAmount = () => {
-    setCashReceived(String(Math.ceil(total))) // or String(total) if you want exact cents
+    setCashReceived(String(Math.ceil(total)))
   }
 
   const handleInputChange = (e) => {
@@ -52,9 +50,7 @@ export default function BillOut({ order, onBack }) {
     if (name === 'customerId') setCustomerId(value)
   }
 
-  const handlePaymentMethodSelect = (method) => {
-    setPaymentMethod(method)
-  }
+  const handlePaymentMethodSelect = (method) => setPaymentMethod(method)
 
   const handleDiscount = (type) => {
     setDiscountType((prev) => (prev === type ? null : type))
@@ -65,7 +61,16 @@ export default function BillOut({ order, onBack }) {
       alert('Please select a payment method.')
       return
     }
+
+    // OPTIONAL: if you want validations back, add them here
+
     setShowComplete(true)
+  }
+
+  // ✅ one function to close the modal + notify Orders.jsx to clear panel
+  const closeCompleteModal = () => {
+    setShowComplete(false)
+    onComplete?.() // ✅ Orders.jsx should setSelectedOrder(null) here
   }
 
   return (
@@ -73,6 +78,7 @@ export default function BillOut({ order, onBack }) {
       {/* Top row: Back button */}
       <div className="mb-4">
         <button
+          type="button"
           onClick={onBack}
           className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200"
         >
@@ -144,7 +150,6 @@ export default function BillOut({ order, onBack }) {
               <span className="text-2xl font-semibold text-gray-900">{peso(total)}</span>
             </div>
 
-            {/* ✅ use cashReceived + change */}
             <div className="mt-4 space-y-1 text-sm text-gray-900">
               <div className="flex items-center justify-between">
                 <span className="font-semibold">Cash</span>
@@ -158,14 +163,13 @@ export default function BillOut({ order, onBack }) {
           </div>
         </div>
 
-        {/* Payment + Calculator in SAME div */}
+        {/* RIGHT: Payment */}
         <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
           <h2 className="text-3xl font-semibold text-gray-900">Payment</h2>
           <p className="mt-1 text-sm text-gray-500">
             Select payment method and complete transaction
           </p>
 
-          {/* inner grid */}
           <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_420px] xl:grid-cols-[1fr_520px]">
             {/* Payment Form */}
             <div>
@@ -173,13 +177,13 @@ export default function BillOut({ order, onBack }) {
 
               <div className="mt-3 grid gap-4 sm:grid-cols-2">
                 <button
+                  type="button"
                   onClick={() => handlePaymentMethodSelect('cash')}
-                  className={`flex items-center gap-3 rounded-xl border p-4 transition
-                    ${
-                      paymentMethod === 'cash'
-                        ? 'border-purple-500 bg-purple-50'
-                        : 'border-gray-200 bg-white hover:bg-gray-50'
-                    }`}
+                  className={`flex items-center gap-3 rounded-xl border p-4 transition ${
+                    paymentMethod === 'cash'
+                      ? 'border-purple-500 bg-purple-50'
+                      : 'border-gray-200 bg-white hover:bg-gray-50'
+                  }`}
                 >
                   <div className="h-10 w-10 rounded-lg bg-emerald-50 flex items-center justify-center">
                     <img src={money_icon} alt="cash" className="h-5 w-5" />
@@ -188,13 +192,13 @@ export default function BillOut({ order, onBack }) {
                 </button>
 
                 <button
+                  type="button"
                   onClick={() => handlePaymentMethodSelect('ewallet')}
-                  className={`flex items-center gap-3 rounded-xl border p-4 transition
-                    ${
-                      paymentMethod === 'ewallet'
-                        ? 'border-purple-500 bg-purple-50'
-                        : 'border-gray-200 bg-white hover:bg-gray-50'
-                    }`}
+                  className={`flex items-center gap-3 rounded-xl border p-4 transition ${
+                    paymentMethod === 'ewallet'
+                      ? 'border-purple-500 bg-purple-50'
+                      : 'border-gray-200 bg-white hover:bg-gray-50'
+                  }`}
                 >
                   <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center">
                     <img src={wallet_icon} alt="wallet" className="h-5 w-5" />
@@ -208,26 +212,26 @@ export default function BillOut({ order, onBack }) {
                 <p className="text-sm font-semibold text-gray-900">Discounts</p>
                 <div className="mt-3 grid gap-4 sm:grid-cols-2">
                   <button
+                    type="button"
                     onClick={() => handleDiscount('pwd')}
-                    className={`rounded-xl border p-4 text-left transition
-                      ${
-                        discountType === 'pwd'
-                          ? 'border-purple-500 bg-purple-50'
-                          : 'border-gray-200 bg-white hover:bg-gray-50'
-                      }`}
+                    className={`rounded-xl border p-4 text-left transition ${
+                      discountType === 'pwd'
+                        ? 'border-purple-500 bg-purple-50'
+                        : 'border-gray-200 bg-white hover:bg-gray-50'
+                    }`}
                   >
                     <p className="text-sm font-semibold text-gray-900">PWD / Senior Citizen</p>
                     <p className="mt-1 text-xs text-gray-500">12% discount</p>
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => handleDiscount('override')}
-                    className={`rounded-xl border p-4 text-left transition
-                      ${
-                        discountType === 'override'
-                          ? 'border-purple-500 bg-purple-50'
-                          : 'border-gray-200 bg-white hover:bg-gray-50'
-                      }`}
+                    className={`rounded-xl border p-4 text-left transition ${
+                      discountType === 'override'
+                        ? 'border-purple-500 bg-purple-50'
+                        : 'border-gray-200 bg-white hover:bg-gray-50'
+                    }`}
                   >
                     <p className="text-sm font-semibold text-gray-900">Override Discount</p>
                     <p className="mt-1 text-xs text-gray-500">Custom discount</p>
@@ -279,36 +283,42 @@ export default function BillOut({ order, onBack }) {
 
                 <div className="mt-3 grid grid-cols-3 gap-2">
                   <button
+                    type="button"
                     onClick={() => handleQuickAmount(20)}
                     className="rounded-xl bg-gray-100 px-3 py-2 text-sm font-semibold hover:bg-gray-200"
                   >
                     ₱20
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleQuickAmount(50)}
                     className="rounded-xl bg-gray-100 px-3 py-2 text-sm font-semibold hover:bg-gray-200"
                   >
                     ₱50
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleQuickAmount(100)}
                     className="rounded-xl bg-gray-100 px-3 py-2 text-sm font-semibold hover:bg-gray-200"
                   >
                     ₱100
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleQuickAmount(500)}
                     className="rounded-xl bg-gray-100 px-3 py-2 text-sm font-semibold hover:bg-gray-200"
                   >
                     ₱500
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleQuickAmount(1000)}
                     className="rounded-xl bg-gray-100 px-3 py-2 text-sm font-semibold hover:bg-gray-200"
                   >
                     ₱1000
                   </button>
                   <button
+                    type="button"
                     onClick={handleExactAmount}
                     className="rounded-xl border border-purple-600 bg-white px-3 py-2 text-sm font-semibold text-purple-700 hover:bg-purple-50"
                   >
@@ -320,6 +330,7 @@ export default function BillOut({ order, onBack }) {
               <div className="mt-5 grid grid-cols-3 gap-3">
                 {['7', '8', '9', '4', '5', '6', '1', '2', '3', '.', '0', '00'].map((k) => (
                   <button
+                    type="button"
                     key={k}
                     onClick={() => handleCalculatorInput(k)}
                     className="h-14 rounded-xl border border-gray-200 bg-white text-base font-semibold hover:bg-gray-50"
@@ -341,10 +352,12 @@ export default function BillOut({ order, onBack }) {
         </div>
       </div>
 
-      {/*  Modal INSIDE the return wrapper */}
+      {/* ✅ Complete Modal */}
       {showComplete && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center">
+          {/* backdrop */}
           <button
+            type="button"
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowComplete(false)}
             aria-label="Close"
@@ -361,10 +374,8 @@ export default function BillOut({ order, onBack }) {
               <h3 className="mt-4 text-base font-semibold text-gray-900">Order Completed</h3>
 
               <button
-                onClick={() => {
-                  setShowComplete(false)
-                  onBack()
-                }}
+                type="button"
+                onClick={closeCompleteModal}
                 className="mt-5 w-full rounded-xl bg-purple-600 py-3 text-sm font-semibold text-white hover:bg-purple-700"
               >
                 Done
